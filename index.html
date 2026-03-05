@@ -3,45 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>おかねの相談室 | りそなグループ プレミアムAIアドバイザー</title>
+    <title>りそなグループ | おかねの相談室（AIアドバイザー）</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;600&family=Shippori+Mincho:wght@400;600;700&family=DM+Mono:wght@300;400&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@600&family=Montserrat:wght@600;700&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --green: #01894d;
-            --green-dark: #005c35;
-            --green-mid: #019a58;
-            --green-lite: #dff2ea;
-            --green-pale: #f0faf5;
-            --orange: #e8680a;
-            --orange-mid: #f07800;
-            --orange-pale: #fff4e6;
-            --n900: #111;
-            --n800: #222;
-            --n700: #3a3a3a;
-            --n600: #555;
-            --n500: #777;
-            --n400: #999;
-            --n300: #ccc;
-            --n200: #e4e4e4;
-            --n100: #f2f2f2;
-            --n50: #f9f9f9;
-            --white: #fff;
-            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
-            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
-            --r-md: 14px;
-            --r-lg: 22px;
-            --r-xl: 30px;
-            --r-full: 9999px;
-            --font-sans: 'Noto Sans JP', sans-serif;
-            --font-serif: 'Shippori Mincho', 'Noto Serif JP', serif;
-            --sidebar-w: 300px;
-            --info-w: 260px;
-            --header-h: 65px;
-            --t: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Official Resona Brand Colors */
+            --resona-green: #009B60;
+            --resona-green-dark: #007c4d;
+            --resona-green-lite: #e6f5ef;
+            --resona-orange: #EC6C1F;
+            --resona-orange-hover: #d15610;
+            --resona-orange-lite: #fff0e7;
+            --resona-yellow: #f4d03f;
+            --text-main: #333333;
+            --text-sub: #666666;
+            --bg-gray: #f4f7f6;
+            --border-gray: #e0e0e0;
+            --white: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --header-h: 80px;
+            --nav-h: 50px;
         }
         * {
             box-sizing: border-box;
@@ -49,276 +34,248 @@
             padding: 0;
         }
         body {
-            font-family: var(--font-sans);
-            background: var(--n50);
-            color: var(--n900);
-            height: 100vh;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            font-family: 'Noto Sans JP', sans-serif;
+            background: var(--bg-gray);
+            color: var(--text-main);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
-        /* --- Header --- */
+        /* --- Global Header (Official Replication) --- */
+        .top-bar {
+            height: 34px;
+            background: #333;
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            font-size: 11px;
+        }
+        .top-bar a {
+            color: #ccc;
+            margin-right: 20px;
+            transition: 0.2s;
+        }
+        .top-bar a:hover {
+            color: white;
+        }
         header {
             height: var(--header-h);
             background: var(--white);
-            border-bottom: 2px solid var(--green);
             display: flex;
             align-items: center;
-            padding: 0 24px;
-            gap: 16px;
-            flex-shrink: 0;
-            z-index: 100;
-            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
+            padding: 0 40px;
+            gap: 40px;
+            z-index: 1000;
+            position: relative;
         }
-        .hdr-logo {
+        .logo img {
+            height: 44px;
+            display: block;
+        }
+        .main-nav {
+            display: flex;
+            gap: 30px;
+            font-size: 15px;
+            font-weight: 700;
+        }
+        .nav-link {
+            color: var(--text-main);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            padding-bottom: 5px;
+            transition: 0.2s;
+        }
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--resona-green);
+            border-bottom-color: var(--resona-green);
+        }
+        .header-right {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .btn-login {
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: var(--resona-orange);
+            color: white;
+            border: none;
+            box-shadow: 0 2px 8px rgba(236, 108, 31, 0.2);
+        }
+        .btn-login:hover {
+            background: var(--resona-orange-hover);
+            transform: translateY(-1px);
+        }
+        .btn-search {
+            font-size: 20px;
+            color: var(--resona-green);
+            cursor: pointer;
+        }
+        /* --- Sub Header --- */
+        .sub-head {
+            background: var(--white);
+            border-top: 1px solid var(--border-gray);
+            border-bottom: 1px solid var(--border-gray);
+            height: var(--nav-h);
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            gap: 25px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .sub-head a {
+            color: var(--text-sub);
+        }
+        .sub-head a.active {
+            color: var(--resona-green);
+            font-weight: 700;
+        }
+        /* --- App Container --- */
+        .app-wrap {
+            max-width: 1440px;
+            margin: 30px auto;
+            padding: 0 40px;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 30px;
+            height: calc(100vh - 250px);
+        }
+        /* --- Sidebar (Dashboard Style) --- */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .card {
+            background: var(--white);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-gray);
+        }
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--resona-green-dark);
+            margin-bottom: 15px;
+            border-left: 4px solid var(--resona-green);
+            padding-left: 10px;
+        }
+        .user-profile {
+            text-align: center;
+        }
+        .user-av {
+            width: 64px;
+            height: 64px;
+            background: var(--resona-green-lite);
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: var(--resona-green);
+        }
+        .user-name {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .user-rank {
+            font-size: 11px;
+            color: var(--resona-green);
+            font-weight: 700;
+            background: var(--resona-green-lite);
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+        /* Data Analyze Demo */
+        .demo-zone {
+            text-align: center;
+            padding: 20px 0;
+            border: 2px dashed var(--resona-green-lite);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .demo-zone:hover {
+            background: var(--resona-green-lite);
+        }
+        .demo-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+        .demo-btn {
+            background: var(--resona-green);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        /* --- Main Content (Chatbot) --- */
+        .main-content {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-gray);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-header {
+            padding: 15px 25px;
+            border-bottom: 1px solid var(--border-gray);
             display: flex;
             align-items: center;
             gap: 12px;
         }
-        .hdr-mark {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .chat-logo {
             font-size: 20px;
-            color: white;
-            box-shadow: 0 4px 12px rgba(1, 137, 77, 0.25);
         }
-        .hdr-name {
-            font-family: var(--font-serif);
-            font-size: 19px;
-            color: var(--green-dark);
+        .chat-title {
             font-weight: 700;
-            letter-spacing: 0.05em;
+            color: var(--resona-green-dark);
         }
-        .hdr-name span {
-            display: block;
-            font-size: 9px;
-            font-family: var(--font-sans);
-            color: var(--n400);
-            letter-spacing: 0.15em;
-            font-weight: 400;
-            margin-top: -2px;
-        }
-        .hdr-status {
+        .chat-status {
             margin-left: auto;
+            font-size: 12px;
+            color: var(--resona-green);
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: var(--green-pale);
-            padding: 8px 16px;
-            border-radius: var(--r-full);
-            border: 1px solid var(--green-lite);
+            gap: 6px;
         }
-        .status-dot {
+        .pulse-dot {
             width: 8px;
             height: 8px;
-            background: var(--green);
+            background: var(--resona-green);
             border-radius: 50%;
-            position: relative;
-        }
-        .status-dot::after {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: 50%;
-            background: var(--green);
-            opacity: 0.3;
             animation: pulse 2s infinite;
-        }
-        .status-text {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--green-dark);
         }
         @keyframes pulse {
             0% {
                 transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.5);
                 opacity: 0.4;
             }
             100% {
-                transform: scale(2.5);
-                opacity: 0;
+                transform: scale(1);
+                opacity: 1;
             }
         }
-        /* --- Layout --- */
-        .wrap {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-        }
-        /* --- Sidebar (Left) --- */
-        .sb {
-            width: var(--sidebar-w);
-            background: #fff;
-            border-right: 1px solid var(--n200);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px;
-            overflow-y: auto;
-        }
-        .section-title {
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--n400);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .section-title::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--n100);
-        }
-        /* Score Card */
-        .score-card {
-            background: linear-gradient(135deg, var(--green-dark) 0%, #003d20 100%);
-            border-radius: 20px;
-            padding: 24px;
-            color: white;
-            text-align: center;
-            box-shadow: var(--shadow-md);
-            position: relative;
-            overflow: hidden;
-        }
-        .score-card::before {
-            content: '🌿';
-            position: absolute;
-            font-size: 100px;
-            opacity: 0.05;
-            right: -20px;
-            bottom: -20px;
-        }
-        .score-val {
-            font-family: 'DM Mono', monospace;
-            font-size: 56px;
-            font-weight: 400;
-            line-height: 1;
-        }
-        .score-lbl {
-            font-size: 11px;
-            opacity: 0.7;
-            margin-top: 8px;
-            letter-spacing: 0.05em;
-        }
-        .score-bar {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 10px;
-            margin-top: 15px;
-            overflow: hidden;
-        }
-        .score-fill {
-            height: 100%;
-            width: 84%;
-            background: #55efc4;
-            transition: width 1.5s ease;
-        }
-        /* Upload Zone */
-        .up-zone {
-            border: 2px dashed var(--n200);
-            border-radius: 16px;
-            padding: 24px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--t);
-            background: var(--n50);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        .up-zone:hover {
-            border-color: var(--green);
-            background: var(--green-pale);
-        }
-        .up-icon {
-            font-size: 32px;
-            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
-        }
-        .up-text {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--n700);
-        }
-        .up-sub {
-            font-size: 10px;
-            color: var(--n400);
-        }
-        /* Nav Menu */
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--n600);
-            cursor: pointer;
-            transition: var(--t);
-            margin-bottom: 2px;
-        }
-        .nav-item:hover {
-            background: var(--n50);
-            color: var(--green);
-        }
-        .nav-item.active {
-            background: var(--green-lite);
-            color: var(--green-dark);
-        }
-        .nav-ico {
-            font-size: 18px;
-        }
-        /* --- Main Chat Area --- */
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: var(--n50);
-            position: relative;
-        }
-        .qbar {
-            padding: 12px 20px;
-            background: #fff;
-            border-bottom: 1px solid var(--n200);
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            scrollbar-width: none;
-            flex-shrink: 0;
-        }
-        .qbar::-webkit-scrollbar {
-            display: none;
-        }
-        .qchip {
-            white-space: nowrap;
-            padding: 8px 18px;
-            border-radius: var(--r-full);
-            background: #fff;
-            border: 1px solid var(--n200);
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--n700);
-            cursor: pointer;
-            transition: var(--t);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-        }
-        .qchip:hover {
-            border-color: var(--green);
-            color: var(--green);
-            background: var(--green-pale);
-            transform: translateY(-1px);
-        }
-        .chat-frame-wrap {
+        .iframe-wrap {
             flex: 1;
             position: relative;
         }
@@ -327,284 +284,255 @@
             height: 100%;
             border: none;
         }
-        /* --- Info Panel (Right) --- */
-        .info {
-            width: var(--info-w);
-            background: #fff;
-            border-left: 1px solid var(--n200);
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            gap: 20px;
-            overflow-y: auto;
+        /* --- Footer (Corporate Style) --- */
+        footer {
+            background: #333;
+            color: white;
+            padding: 60px 40px;
         }
-        .insight-card {
-            background: var(--green-pale);
-            border: 1px solid var(--green-lite);
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .footer-grid {
+            max-width: 1360px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 40px;
         }
-        .ic-hdr {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--green-dark);
+        .footer-col h4 {
+            font-size: 14px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #555;
+            padding-bottom: 10px;
         }
-        .ic-body {
-            font-size: 11px;
-            line-height: 1.6;
-            color: var(--n600);
+        .footer-col ul {
+            list-style: none;
         }
-        .service-card {
-            background: var(--white);
-            border: 1px solid var(--n100);
-            border-radius: 16px;
-            padding: 12px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .footer-col li {
+            margin-bottom: 12px;
+            font-size: 13px;
+            color: #aaa;
             cursor: pointer;
-            transition: var(--t);
-            box-shadow: var(--shadow-sm);
+            transition: 0.2s;
         }
-        .service-card:hover {
-            transform: translateX(4px);
-            border-color: var(--green-lite);
+        .footer-col li:hover {
+            color: white;
         }
-        .svc-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--n50);
-            border-radius: 8px;
+        .footer-bottom {
+            border-top: 1px solid #444;
+            margin-top: 60px;
+            padding-top: 30px;
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-        .svc-name {
+            justify-content: space-between;
             font-size: 12px;
-            font-weight: 700;
-            color: var(--n800);
+            color: #777;
         }
-        /* --- Loading --- */
-        #loading {
+        /* Load Animation */
+        #loader {
             position: fixed;
             inset: 0;
-            background: #fff;
-            z-index: 2000;
+            background: white;
+            z-index: 10000;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             transition: 0.8s;
         }
-        .loading-mark {
-            font-size: 60px;
-            animation: float 3s ease-in-out infinite;
+        .loader-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--resona-green);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(0, 155, 96, 0.3);
+            animation: bounce 1.5s infinite ease-in-out;
         }
-        @keyframes float {
+        @keyframes bounce {
             0%,
             100% {
                 transform: translateY(0);
             }
             50% {
-                transform: translateY(-15px);
+                transform: translateY(-20px);
             }
         }
-        /* Admin Modal */
-        #modal {
+        /* Hidden Admin */
+        #admin {
             position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            display: none;
+            bottom: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 50%;
+            display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
-        }
-        .modal-box {
-            background: #fff;
-            border-radius: 24px;
-            padding: 40px;
-            width: 100%;
-            max-width: 480px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
-        }
-        .modal-title {
-            font-family: var(--font-serif);
-            font-size: 24px;
-            margin-bottom: 8px;
-        }
-        .modal-input {
-            width: 100%;
-            padding: 14px 20px;
-            border-radius: 12px;
-            border: 1px solid var(--n200);
-            margin-bottom: 16px;
-            font-size: 15px;
-        }
-        .btn-save {
-            width: 100%;
-            padding: 16px;
-            background: var(--green);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-weight: 700;
             cursor: pointer;
-            font-size: 16px;
+            z-index: 9999;
         }
     </style>
 </head>
 <body>
-    <div id="loading">
-        <div class="loading-mark">🌿</div>
-        <div class="hdr-name" style="margin-top:20px">りそな AIマネーアドバイザー</div>
-        <div style="margin-top:10px; color: var(--n400); font-size: 12px; letter-spacing: 0.2em;">SYSTEM INITIALIZING...
-        </div>
+    <div id="loader">
+        <div class="loader-icon">🌿</div>
+        <p style="margin-top:20px; font-family:'Noto Serif JP'; font-size:24px; color:var(--resona-green-dark)">おかねの相談室
+        </p>
+    </div>
+    <div class="top-bar">
+        <a href="https://www.resonabank.co.jp/" target="_blank">個人のお客様</a>
+        <a href="https://www.resonabank.co.jp/hojin/" target="_blank">法人のお客様</a>
+        <a href="https://www.resonabank.co.jp/about/" target="_blank">りそな銀行について</a>
+        <div style="margin-left:auto">店舗・ATM検索 | よくあるご質問</div>
     </div>
     <header>
-        <div class="hdr-logo" onclick="logoClick()">
-            <div class="hdr-mark">🌿</div>
-            <div class="hdr-name">おかねの相談室<span>RESONA AI FINANCIAL ADVISOR</span></div>
+        <div class="logo">
+            <a href="https://www.resonabank.co.jp/">
+                <!-- Placeholder SVG for Resona Bank logo aesthetic -->
+                <svg width="180" height="44" viewBox="0 0 180 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="180" height="44" rx="4" fill="white" />
+                    <path
+                        d="M10 22C10 15.3726 15.3726 10 22 10C28.6274 10 34 15.3726 34 22C34 28.6274 28.6274 34 22 34C15.3726 34 10 28.6274 10 22Z"
+                        fill="#009B60" />
+                    <text x="45" y="28" fill="#007c4d" font-family="Noto Serif JP" font-weight="600"
+                        font-size="20">りそな銀行</text>
+                </svg>
+            </a>
         </div>
-        <div class="hdr-status">
-            <div class="status-dot"></div>
-            <div class="status-text">プレミアムAIに接続中</div>
+        <nav class="main-nav">
+            <div class="nav-link">ためる・ふやす</div>
+            <div class="nav-link">かりる</div>
+            <div class="nav-link">そなえる</div>
+            <div class="nav-link active">相談・シミュレーション</div>
+        </nav>
+        <div class="header-right">
+            <div class="btn-search">🔍</div>
+            <button class="btn-login" onclick="location.href='https://www.resonabank.co.jp/direct/index.html'">マイページ
+                ログイン</button>
         </div>
     </header>
-    <div class="wrap">
-        <aside class="sb">
-            <div>
-                <div class="section-title">家計診断ステータス</div>
-                <div class="score-card">
-                    <div class="score-val" id="score">84</div>
-                    <div class="score-lbl">総合家計スコア</div>
-                    <div class="score-bar">
-                        <div class="score-fill" id="scoreFill"></div>
-                    </div>
+    <div class="sub-head">
+        <a href="https://www.resonabank.co.jp/kojin/sim/">シミュレーション一覧</a>
+        <a href="#" class="active">AIマネーアドバイザー（おかねの相談室）</a>
+        <a href="https://www.resonabank.co.jp/kojin/nisa/">新NISA</a>
+        <a href="https://www.resonabank.co.jp/kojin/jutaku/">住宅ローン</a>
+    </div>
+    <div class="app-wrap">
+        <aside class="sidebar">
+            <div class="card user-profile">
+                <div class="user-av">👤</div>
+                <div class="user-name">田中 美咲 様</div>
+                <div class="user-rank">ダイヤモンド会員</div>
+            </div>
+            <div class="card">
+                <div class="card-title">データで相談</div>
+                <div class="demo-zone" onclick="startAnalyze()">
+                    <div class="demo-icon">📊</div>
+                    <p style="font-size:12px; font-weight:500;">CSV/Excelを読み込む</p>
+                    <p style="font-size:10px; color:#999;">家計データからAIが分析</p>
+                    <div class="demo-btn">ファイルを選択</div>
+                </div>
+                <div id="file-status"
+                    style="margin-top:15px; font-size:11px; text-align:center; display:none; color:var(--resona-green); font-weight:700;">
+                    ✅ 解析完了：支出傾向を特定</div>
+            </div>
+            <div class="card">
+                <div class="card-title">関連サービス</div>
+                <div style="font-size:13px;">
+                    <p style="padding:10px 0; border-bottom:1px solid #eee; cursor:pointer;">▶ つみたてNISAのご相談</p>
+                    <p style="padding:10px 0; border-bottom:1px solid #eee; cursor:pointer;">▶ 住宅ローン金利比較</p>
+                    <p style="padding:10px 0; cursor:pointer;">▶ ライフプランシミュレーション</p>
                 </div>
             </div>
-            <div>
-                <div class="section-title">データインポート</div>
-                <div class="up-zone" onclick="document.getElementById('fileInp').click()">
-                    <input type="file" id="fileInp" style="display:none" onchange="runDemo()">
-                    <div class="up-icon">📊</div>
-                    <div class="up-text">Excel / CSV を解析</div>
-                    <div class="up-sub">家計データからAIが診断</div>
-                </div>
-                <div id="fileStatus"
-                    style="font-size:11px; color:var(--green); margin-top:10px; text-align:center; display:none;">✅
-                    ファイルの読み込みが完了しました</div>
-            </div>
-            <nav>
-                <div class="section-title">メニュー</div>
-                <div class="nav-item active"><span class="nav-ico">💬</span>AIに相談する</div>
-                <div class="nav-item"><span class="nav-ico">📊</span>資産推移を分析</div>
-                <div class="nav-item"><span class="nav-ico">🎯</span>目標・ライフプラン</div>
-                <div class="nav-item"><span class="nav-ico">🏦</span>りそな提携サービス</div>
-            </nav>
         </aside>
-        <main>
-            <div class="qbar">
-                <div class="qchip" onclick="sendQ('毎月の支出の無駄を分析して')">📈 支出の無駄を分析</div>
-                <div class="qchip" onclick="sendQ('新NISAで月5万円積み立てると？')">💰 新NISAシミュレーション</div>
-                <div class="qchip" onclick="sendQ('今の年収で住宅ローンはいくら借りれる？')">🏠 住宅ローンの相談</div>
-                <div class="qchip" onclick="sendQ('老後資金3000万円貯めるプランを')">🌴 老後の資産形成</div>
+        <main class="main-content">
+            <div class="chat-header">
+                <div class="chat-logo">🤖</div>
+                <div class="chat-title">りそな AIマネーアドバイザー</div>
+                <div class="chat-status">
+                    <div class="pulse-dot"></div>
+                    ONLINE
+                </div>
             </div>
-            <div class="chat-frame-wrap">
+            <div class="iframe-wrap">
                 <iframe id="dify" src="https://udify.app/chatbot/fCguvhc6kbDWNOAZ" allow="microphone"></iframe>
             </div>
         </main>
-        <aside class="info">
-            <div>
-                <div class="section-title">家計インサイト</div>
-                <div class="insight-card">
-                    <div class="ic-hdr">✨ 節約のチャンス</div>
-                    <div class="ic-body">サブスクリプション費用が平均より3,000円高い傾向にあります。見直しで年間3.6万円の余裕が生まれます。</div>
-                </div>
-            </div>
-            <div>
-                <div class="section-title">りそなおすすめ</div>
-                <div class="service-card">
-                    <div class="svc-icon">📈</div>
-                    <div class="svc-name">りそな投資信託</div>
-                </div>
-                <div class="service-card">
-                    <div class="svc-icon">🛡️</div>
-                    <div class="svc-name">保険の無料見直し</div>
-                </div>
-                <div class="service-card">
-                    <div class="svc-icon">📅</div>
-                    <div class="svc-name">店舗での相談予約</div>
-                </div>
-            </div>
-        </aside>
     </div>
-    <!-- Admin Modal -->
-    <div id="modal">
-        <div class="modal-box">
-            <h3 class="modal-title">管理者設定</h3>
-            <p style="font-size:12px; color:var(--n400); margin-bottom:20px;">デモ用URLとパスワードの設定</p>
-            <input type="text" id="urlInp" class="modal-input" placeholder="Dify URL (https://udify.app/...)">
-            <input type="password" id="passInp" class="modal-input" placeholder="管理者パスワードを入力">
-            <button class="btn-save" onclick="saveAdmin()">設定を保存して更新</button>
-            <p onclick="closeAdmin()"
-                style="text-align:center; font-size:12px; color:var(--n400); margin-top:20px; cursor:pointer;">キャンセル</p>
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>ためる・ふやす</h4>
+                <ul>
+                    <li>普通預金・定期預金</li>
+                    <li>りそなのつみたてNISA</li>
+                    <li>外貨預金</li>
+                    <li>投資信託</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>かりる</h4>
+                <ul>
+                    <li>住宅ローン</li>
+                    <li>マイカーローン</li>
+                    <li>カードローン</li>
+                    <li>教育ローン</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>そなえる・のこす</h4>
+                <ul>
+                    <li>保険のご相談</li>
+                    <li>遺言信託</li>
+                    <li>生前贈与・相続</li>
+                    <li>教育資金贈与信託</li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>りそな銀行について</h4>
+                <ul>
+                    <li>CSR・社会貢献</li>
+                    <li>採用情報</li>
+                    <li>会社概要</li>
+                    <li>ニュースリリース</li>
+                </ul>
+            </div>
         </div>
-    </div>
+        <div class="footer-bottom">
+            <div>© Resona Bank, Ltd. All rights reserved.</div>
+            <div>利用規約 | プライバシーポリシー | 免責事項</div>
+        </div>
+    </footer>
+    <!-- Tiny Admin Trigger -->
+    <div id="admin" onclick="openAdmin()">⚙</div>
     <script>
         window.onload = () => {
             setTimeout(() => {
-                const loader = document.getElementById('loading');
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 800);
-            }, 1500);
-            const saved = localStorage.getItem('resona_demo_url');
-            if (saved) document.getElementById('dify').src = saved;
+                document.getElementById('loader').style.opacity = '0';
+                setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
+            }, 2000);
         };
-        function runDemo() {
-            const status = document.getElementById('fileStatus');
-            const scoreVal = document.getElementById('score');
-            const fill = document.getElementById('scoreFill');
+        function startAnalyze() {
+            const status = document.getElementById('file-status');
             status.style.display = 'block';
             status.innerText = "⏳ データを高度解析中...";
+            status.style.color = "var(--resona-orange)";
             setTimeout(() => {
-                const rand = Math.floor(Math.random() * 15) + 80;
-                scoreVal.innerText = rand;
-                fill.style.width = rand + "%";
-                status.innerText = "✅ 解析完了：AIがデータを反映しました";
-                alert("家計データの読み込みが完了しました。アドバイザーに「今のデータの分析結果を教えて」と話しかけてください。");
+                status.innerText = "✅ 解析完了：支出傾向を特定しました";
+                status.style.color = "var(--resona-green)";
+                alert("データの解析が完了しました。\nAIマネーアドバイザーに「今のデータの分析結果を教えて」と話しかけてみてください。");
             }, 2500);
         }
-        function sendQ(q) {
-            alert("「" + q + "」とAIに送信します。\n（デモ：クリップボードにコピーしましたので、チャット欄に貼り付けてください）");
-            navigator.clipboard.writeText(q);
-        }
-        let clicks = 0;
-        function logoClick() {
-            clicks++;
-            if (clicks >= 5) { document.getElementById('modal').style.display = 'flex'; clicks = 0; }
-            setTimeout(() => clicks = 0, 3000);
-        }
-        function closeAdmin() { document.getElementById('modal').style.display = 'none'; }
-        function saveAdmin() {
-            const url = document.getElementById('urlInp').value;
-            const pass = document.getElementById('passInp').value;
-            if (pass === 'resona2025') {
-                if (url) {
-                    localStorage.setItem('resona_demo_url', url);
-                    document.getElementById('dify').src = url;
-                }
-                alert('設定を保存しました。');
-                closeAdmin();
-            } else { alert('パスワードが正しくありません。'); }
+        function openAdmin() {
+            const url = prompt("Dify URLを更新しますか？", localStorage.getItem('resona_url') || "");
+            if (url) {
+                localStorage.setItem('resona_url', url);
+                document.getElementById('dify').src = url;
+            }
         }
     </script>
 </body>
