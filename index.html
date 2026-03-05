@@ -3,128 +3,155 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>おかねの相談室 | データ分析対応版</title>
+  <title>おかねの相談室 | りそなグループ AIアドバイザー</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    /* 以前のデザイン変数を継承 */
     :root {
       --green: #01894d; --green-dark: #005c35; --green-lite: #dff2ea; --green-pale: #f0faf5;
       --orange: #e8680a; --n900: #111; --n700: #3a3a3a; --n400: #999; --n200: #e4e4e4; --n50: #f9f9f9; --white: #fff;
       --shadow: 0 4px 20px rgba(0,0,0,.08);
-      --r-md: 14px; --header-h: 64px; --sidebar-w: 288px; --footer-h: 65px;
+      --header-h: 64px; --sidebar-w: 288px; --info-w: 240px; --footer-h: 65px;
+      --t: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Noto Sans JP', sans-serif; background: var(--n50); color: var(--n900); height: 100dvh; overflow: hidden; }
+    body { font-family: 'Noto Sans JP', sans-serif; background: var(--n50); color: var(--n900); height: 100dvh; overflow: hidden; -webkit-font-smoothing: antialiased; }
 
-    /* ─── Layout ─── */
-    #app { display: flex; flex-direction: column; height: 100dvh; }
-    header { height: var(--header-h); background: white; border-bottom: 1px solid var(--n200); display: flex; align-items: center; padding: 0 20px; justify-content: space-between; z-index: 100; }
-    .logo { display: flex; align-items: center; gap: 10px; font-family: 'Shippori Mincho', serif; font-weight: 700; color: var(--green-dark); }
-    .logo span { background: var(--green); color: white; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 8px; }
+    /* ─── Loading & Login ─── */
+    #ls, #loginModal { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; transition: opacity .6s ease; }
+    #ls { background: var(--green-dark); }
+    #loginModal { background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: none; }
+    .login-card { background: white; padding: 40px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; box-shadow: var(--shadow); }
+    .login-btn { width: 100%; padding: 14px; background: var(--green); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 20px; }
 
-    .wrap { display: flex; flex: 1; overflow: hidden; }
+    /* ─── App Layout ─── */
+    #app { display: flex; flex-direction: column; height: 100dvh; opacity: 0; transition: opacity .5s; }
+    #app.visible { opacity: 1; }
+    .wrap { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-    /* ─── Sidebar (Upload Function) ─── */
-    .sb { width: var(--sidebar-w); background: white; border-right: 1px solid var(--n200); display: flex; flex-direction: column; overflow-y: auto; }
+    /* ─── Header ─── */
+    .hdr { height: var(--header-h); background: var(--white); border-bottom: 1px solid var(--n200); display: flex; align-items: center; padding: 0 20px; gap: 15px; z-index: 1000; flex-shrink: 0; }
+    .hdr-logo { display: flex; align-items: center; gap: 10px; font-family: 'Shippori Mincho', serif; font-weight: 700; color: var(--green-dark); font-size: 18px; }
+    .hdr-mark { width: 34px; height: 34px; background: var(--green); color: white; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+
+    /* ─── Sidebar & Upload ─── */
+    .sb { width: var(--sidebar-w); background: var(--white); border-right: 1px solid var(--n200); display: flex; flex-direction: column; flex-shrink: 0; transition: transform var(--t); z-index: 900; }
     .sb-section { padding: 20px 15px 10px; }
-    .sb-label { font-size: 10px; font-weight: 700; color: var(--n400); letter-spacing: .1em; margin-bottom: 12px; }
+    .sb-label { font-size: 10px; font-weight: 700; color: var(--n400); letter-spacing: .1em; margin-bottom: 12px; text-transform: uppercase; }
     
-    /* アップロードゾーンの復活 */
-    .up-zone { border: 2px dashed rgba(1,137,77,.25); border-radius: var(--r-md); padding: 20px 15px; text-align: center; cursor: pointer; background: var(--green-pale); position: relative; transition: 0.2s; }
+    .up-zone { border: 2px dashed rgba(1,137,77,.25); border-radius: 14px; padding: 25px 15px; text-align: center; cursor: pointer; background: var(--green-pale); position: relative; transition: .2s; }
     .up-zone:hover { border-color: var(--green); background: var(--green-lite); }
     .up-zone input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
-    .up-ico { font-size: 24px; margin-bottom: 8px; }
+    .up-ico { font-size: 28px; margin-bottom: 8px; }
     .up-main { font-size: 12px; font-weight: 600; color: var(--green-dark); }
-    
-    /* ファイルリスト */
-    #fl { padding: 0 15px; display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
-    .fi { display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--n50); border-radius: 8px; font-size: 12px; border: 1px solid var(--n200); }
-    .fi-del { margin-left: auto; color: var(--n400); cursor: pointer; }
+    #fl { padding: 0 15px; margin-top: 10px; display: flex; flex-direction: column; gap: 8px; }
+    .fi { display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--n50); border-radius: 10px; font-size: 11px; border: 1px solid var(--n200); }
 
-    /* ─── Chat Area ─── */
-    .chat { flex: 1; display: flex; flex-direction: column; background: #f8faf9; }
-    .qbar { padding: 12px 20px; display: flex; gap: 8px; overflow-x: auto; background: white; border-bottom: 1px solid var(--n200); }
-    .qchip { flex-shrink: 0; padding: 8px 16px; border-radius: 99px; border: 1px solid var(--n200); background: white; font-size: 12px; cursor: pointer; }
+    .pc { background: linear-gradient(135deg, var(--green-dark), #003d20); border-radius: 14px; padding: 18px; color: white; margin: 15px; }
+    .pc-name { font-size: 15px; font-weight: 600; margin-bottom: 12px; }
 
+    /* ─── Chat Area (PC Golden Ratio) ─── */
+    .chat { flex: 1; display: flex; flex-direction: column; background: #f8faf9; position: relative; }
+    .qbar { padding: 12px 20px; display: flex; gap: 8px; overflow-x: auto; background: white; border-bottom: 1px solid var(--n200); scrollbar-width: none; }
+    .qchip { flex-shrink: 0; padding: 8px 16px; border-radius: 99px; border: 1px solid var(--n200); background: white; font-size: 12px; font-weight: 500; cursor: pointer; }
+
+    .chat-container { flex: 1; width: 100%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; background: white; box-shadow: 0 0 40px rgba(0,0,0,0.02); }
     #chatLog { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
     .msg { max-width: 85%; padding: 14px 20px; border-radius: 18px; font-size: 14px; line-height: 1.6; }
     .msg.user { align-self: flex-end; background: var(--green); color: white; border-bottom-right-radius: 4px; }
-    .msg.ai { align-self: flex-start; background: white; border: 1px solid var(--n200); border-bottom-left-radius: 4px; }
+    .msg.ai { align-self: flex-start; background: var(--n50); border: 1px solid var(--n200); border-bottom-left-radius: 4px; }
 
     .input-area { padding: 20px; border-top: 1px solid var(--n200); display: flex; gap: 12px; background: white; }
-    .finp { flex: 1; padding: 14px; border: 1px solid var(--n200); border-radius: 12px; outline: none; }
-    .send-btn { padding: 0 24px; background: var(--green); color: white; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; }
+    .finp { flex: 1; padding: 14px 20px; border: 1px solid var(--n200); border-radius: 14px; outline: none; font-size: 14px; }
+    .send-btn { padding: 0 24px; background: var(--green); color: white; border-radius: 12px; border: none; font-weight: 600; cursor: pointer; }
 
-    @media (max-width: 768px) { .sb { display: none; } }
+    /* ─── Info Panel ─── */
+    .info { width: var(--info-w); background: white; border-left: 1px solid var(--n200); padding: 20px; overflow-y: auto; }
+    .st-row { display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--n50); border-radius: 10px; font-size: 11px; margin-bottom: 24px; }
+    .st-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+
+    /* Mobile only */
+    @media (max-width: 1024px) { .info { display: none; } }
+    @media (max-width: 768px) {
+      .sb { position: absolute; left: 0; top: 0; bottom: 0; transform: translateX(-100%); width: 280px; }
+      .sb.open { transform: translateX(0); }
+    }
   </style>
 </head>
 <body>
 
+<div id="ls">
+  <div class="ls-inner"><div class="ls-mark">🌿</div><h2>おかねの相談室</h2></div>
+</div>
+
+<div id="loginModal">
+  <div class="login-card">
+    <div style="font-size: 44px; margin-bottom: 15px;">👤</div>
+    <h3 style="font-family: 'Shippori Mincho', serif; margin-bottom: 10px;">田中 美咲 様</h3>
+    <button class="login-btn" onclick="startApp()">ログインして相談を始める</button>
+  </div>
+</div>
+
 <div id="app">
-  <header>
-    <div class="logo"><span>🌿</span> おかねの相談室</div>
-    <div style="font-size: 12px; font-weight: 600;">田中 美咲 様</div>
+  <header class="hdr">
+    <div class="hdr-logo"><div class="hdr-mark">🌿</div>おかねの相談室</div>
   </header>
 
   <div class="wrap">
-    <aside class="sb">
+    <aside class="sb" id="sidebar">
       <div class="sb-section">
         <div class="sb-label">データを読み込む</div>
-        <div class="up-zone" id="upZone">
-          <input type="file" id="fileInp" accept=".xlsx,.csv,.pdf" multiple onchange="handleFiles(this.files)">
+        <div class="up-zone">
+          <input type="file" id="fileInp" accept=".xlsx,.csv,.pdf" multiple onchange="updateFilePreview()">
           <div class="up-ico">📂</div>
           <div class="up-main">クリックまたはドラッグ&ドロップ</div>
-          <div style="font-size: 10px; color: var(--n400); margin-top: 5px;">Excel / CSV / PDF 対応</div>
         </div>
         <div id="fl"></div>
       </div>
-
-      <div class="sb-section">
-        <div class="sb-label">相談メニュー</div>
-        <div style="display: flex; flex-direction: column; gap: 5px;">
-          <div class="qchip" style="border-radius: 8px; width: 100%; text-align: left;" onclick="quickAsk('アップロードしたデータを分析して、改善案を出して')">📊 データを分析する</div>
-          <div class="qchip" style="border-radius: 8px; width: 100%; text-align: left;" onclick="quickAsk('住宅ローンのシミュレーションをして')">🏠 ローン相談</div>
-        </div>
-      </div>
+      <div class="pc"><div class="pc-name">田中 美咲 様</div></div>
+      <nav>
+        <div class="nav-item active" onclick="quickAsk('家計診断をお願いします')">💬 AIに相談</div>
+        <div class="nav-item" onclick="quickAsk('利用明細を分析して')">📊 支出を分析</div>
+      </nav>
     </aside>
 
     <main class="chat">
       <div class="qbar">
-        <button class="qchip" onclick="quickAsk('今月の支出傾向は？')">💰 支出傾向</button>
-        <button class="qchip" onclick="quickAsk('食費の節約方法は？')">🍱 食費節約</button>
+        <button class="qchip" onclick="quickAsk('今月の貯蓄余力は？')">💰 貯蓄余力</button>
+        <button class="qchip" onclick="quickAsk('老後資金の計算をして')">🌴 老後資金</button>
       </div>
-      
-      <div id="chatLog">
-        <div class="msg ai">こんにちは、田中様。ExcelやCSVファイルをアップロードいただければ、AIが詳細に分析いたします。</div>
-      </div>
-
-      <div class="input-area">
-        <input type="text" id="userInput" class="finp" placeholder="メッセージを入力...">
-        <button class="send-btn" onclick="handleSend()">送信</button>
+      <div class="chat-container">
+        <div id="chatLog"><div class="msg ai">こんにちは。データをアップロードして相談を始めてください。</div></div>
+        <div class="input-area">
+          <input type="text" id="userInput" class="finp" placeholder="メッセージを入力...">
+          <button class="send-btn" onclick="handleSend()">送信</button>
+        </div>
       </div>
     </main>
+
+    <aside class="info">
+      <div class="st-row"><div class="st-dot"></div> AI稼働中</div>
+    </aside>
   </div>
 </div>
 
 <script>
-  const API_KEY = 'YOUR_DIFY_API_KEY'; 
-  const API_URL = 'https://api.dify.ai/v1/chat-messages';
+  const API_KEY = 'app-lRGucRJhCbT0w8YijOoDLu8g'; 
+  const BASE_URL = 'https://api.dify.ai/v1';
   let conversationId = '';
-  let uploadedFiles = [];
 
-  // ファイル選択の処理
-  function handleFiles(files) {
+  window.onload = () => { setTimeout(() => { document.getElementById('ls').style.display='none'; document.getElementById('loginModal').style.display='flex'; }, 1500); };
+  function startApp() { document.getElementById('loginModal').style.display='none'; document.getElementById('app').classList.add('visible'); }
+
+  function updateFilePreview() {
     const list = document.getElementById('fl');
-    Array.from(files).forEach(file => {
-      uploadedFiles.push(file);
-      const div = document.createElement('div');
-      div.className = 'fi';
-      div.innerHTML = `📄 ${file.name} <span class="fi-del" onclick="this.parentElement.remove()">✕</span>`;
-      list.appendChild(div);
+    list.innerHTML = '';
+    Array.from(document.getElementById('fileInp').files).forEach(f => {
+      list.innerHTML += `<div class="fi">📄 ${f.name}</div>`;
     });
-    // ファイルがアップされたことをAIに伝えるデモ
-    appendMsg(`${files.length}件のファイルを読み込みました。分析を開始できます。`, 'ai');
   }
 
   function appendMsg(text, role) {
@@ -138,43 +165,46 @@
 
   async function askAI(message) {
     appendMsg(message, 'user');
+    const fileInput = document.getElementById('fileInp');
+    let fileIds = [];
+
     try {
-      const response = await fetch(API_URL, {
+      if (fileInput.files.length > 0) {
+        appendMsg('データを解析しています...', 'ai');
+        for (const file of fileInput.files) {
+          const formData = new FormData();
+          formData.append('file', file);
+          formData.append('user', 'sato-eigo-user');
+          const uploadRes = await fetch(`${BASE_URL}/files/upload`, {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${API_KEY}` },
+            body: formData
+          });
+          const uploadData = await uploadRes.json();
+          fileIds.push({ "type": "document", "transfer_method": "local_file", "upload_file_id": uploadData.id });
+        }
+      }
+
+      const response = await fetch(`${BASE_URL}/chat-messages`, {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          inputs: {
-            // ここにファイル名などの情報を渡す設定が可能
-            "file_count": uploadedFiles.length.toString()
-          },
-          query: message,
-          response_mode: "blocking",
-          user: "sato-eigo-user",
-          conversation_id: conversationId
+          inputs: {}, query: message, response_mode: "blocking",
+          user: "sato-eigo-user", conversation_id: conversationId, files: fileIds
         })
       });
       const data = await response.json();
       if (data.answer) {
         appendMsg(data.answer, 'ai');
         conversationId = data.conversation_id;
+        fileInput.value = ''; document.getElementById('fl').innerHTML = '';
       }
-    } catch (e) {
-      appendMsg('接続エラーが発生しました。', 'ai');
-    }
+    } catch (e) { appendMsg('接続エラーが発生しました。', 'ai'); }
   }
 
-  function handleSend() {
-    const inp = document.getElementById('userInput');
-    if(!inp.value.trim()) return;
-    askAI(inp.value);
-    inp.value = '';
-  }
-
+  function handleSend() { const inp = document.getElementById('userInput'); if(!inp.value.trim()) return; askAI(inp.value); inp.value = ''; }
   function quickAsk(msg) { askAI(msg); }
-
-  document.getElementById('userInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleSend();
-  });
+  document.getElementById('userInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSend(); });
 </script>
 
 </body>
