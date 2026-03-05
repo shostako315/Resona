@@ -2,88 +2,610 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>りそな AIマネーアドバイザー</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Noto+Sans+JP:wght@400;700&family=Shippori+Mincho:wght@700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>おかねの相談室 | りそなグループ プレミアムAIアドバイザー</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;600&family=Shippori+Mincho:wght@400;600;700&family=DM+Mono:wght@300;400&display=swap"
+        rel="stylesheet">
     <style>
-        :root { --r-green: #01894d; --r-green-dark: #006036; --r-orange: #e8680a; --r-gray: #f8f9fa; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Noto Sans JP', sans-serif; background: var(--r-gray); color: #333; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
-        header { height: 70px; background: #fff; border-bottom: 3px solid var(--r-green); display: flex; align-items: center; padding: 0 30px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 10; }
-        .logo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .logo-icon { width: 40px; height: 40px; background: var(--r-green); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 22px; }
-        .logo-text { font-family: 'Shippori Mincho', serif; font-size: 20px; color: var(--r-green-dark); }
-        .container { display: flex; flex: 1; overflow: hidden; }
-        aside { width: 320px; background: #fff; border-right: 1px solid #ddd; padding: 25px; display: flex; flex-direction: column; gap: 20px; }
-        .card { background: #fff; border-radius: 15px; padding: 20px; border: 1px solid #eee; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .card-title { font-size: 12px; font-weight: bold; color: #999; margin-bottom: 15px; letter-spacing: 0.1em; }
-        .score { font-size: 45px; font-family: 'Montserrat'; color: var(--r-green); text-align: center; font-weight: 700; }
-        .upload-zone { border: 2px dashed #ccc; border-radius: 10px; padding: 20px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .upload-zone:hover { border-color: var(--r-green); background: #f0faf5; }
-        main { flex: 1; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; }
-        #adminModal { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; z-index: 100; }
-        .modal-content { background: #fff; padding: 30px; border-radius: 20px; width: 400px; }
-        .btn { width: 100%; padding: 12px; background: var(--r-green); color: #fff; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        :root {
+            --green: #01894d;
+            --green-dark: #005c35;
+            --green-mid: #019a58;
+            --green-lite: #dff2ea;
+            --green-pale: #f0faf5;
+            --orange: #e8680a;
+            --orange-mid: #f07800;
+            --orange-pale: #fff4e6;
+            --n900: #111;
+            --n800: #222;
+            --n700: #3a3a3a;
+            --n600: #555;
+            --n500: #777;
+            --n400: #999;
+            --n300: #ccc;
+            --n200: #e4e4e4;
+            --n100: #f2f2f2;
+            --n50: #f9f9f9;
+            --white: #fff;
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 8px 30px rgba(0, 0, 0, 0.08);
+            --r-md: 14px;
+            --r-lg: 22px;
+            --r-xl: 30px;
+            --r-full: 9999px;
+            --font-sans: 'Noto Sans JP', sans-serif;
+            --font-serif: 'Shippori Mincho', 'Noto Serif JP', serif;
+            --sidebar-w: 300px;
+            --info-w: 260px;
+            --header-h: 65px;
+            --t: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: var(--font-sans);
+            background: var(--n50);
+            color: var(--n900);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        /* --- Header --- */
+        header {
+            height: var(--header-h);
+            background: var(--white);
+            border-bottom: 2px solid var(--green);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 16px;
+            flex-shrink: 0;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.03);
+        }
+        .hdr-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .hdr-mark {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            box-shadow: 0 4px 12px rgba(1, 137, 77, 0.25);
+        }
+        .hdr-name {
+            font-family: var(--font-serif);
+            font-size: 19px;
+            color: var(--green-dark);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        .hdr-name span {
+            display: block;
+            font-size: 9px;
+            font-family: var(--font-sans);
+            color: var(--n400);
+            letter-spacing: 0.15em;
+            font-weight: 400;
+            margin-top: -2px;
+        }
+        .hdr-status {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--green-pale);
+            padding: 8px 16px;
+            border-radius: var(--r-full);
+            border: 1px solid var(--green-lite);
+        }
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            position: relative;
+        }
+        .status-dot::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: var(--green);
+            opacity: 0.3;
+            animation: pulse 2s infinite;
+        }
+        .status-text {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--green-dark);
+        }
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.4;
+            }
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+        /* --- Layout --- */
+        .wrap {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        /* --- Sidebar (Left) --- */
+        .sb {
+            width: var(--sidebar-w);
+            background: #fff;
+            border-right: 1px solid var(--n200);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--n400);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--n100);
+        }
+        /* Score Card */
+        .score-card {
+            background: linear-gradient(135deg, var(--green-dark) 0%, #003d20 100%);
+            border-radius: 20px;
+            padding: 24px;
+            color: white;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+        .score-card::before {
+            content: '🌿';
+            position: absolute;
+            font-size: 100px;
+            opacity: 0.05;
+            right: -20px;
+            bottom: -20px;
+        }
+        .score-val {
+            font-family: 'DM Mono', monospace;
+            font-size: 56px;
+            font-weight: 400;
+            line-height: 1;
+        }
+        .score-lbl {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 8px;
+            letter-spacing: 0.05em;
+        }
+        .score-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+        .score-fill {
+            height: 100%;
+            width: 84%;
+            background: #55efc4;
+            transition: width 1.5s ease;
+        }
+        /* Upload Zone */
+        .up-zone {
+            border: 2px dashed var(--n200);
+            border-radius: 16px;
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--t);
+            background: var(--n50);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .up-zone:hover {
+            border-color: var(--green);
+            background: var(--green-pale);
+        }
+        .up-icon {
+            font-size: 32px;
+            filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+        }
+        .up-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--n700);
+        }
+        .up-sub {
+            font-size: 10px;
+            color: var(--n400);
+        }
+        /* Nav Menu */
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--n600);
+            cursor: pointer;
+            transition: var(--t);
+            margin-bottom: 2px;
+        }
+        .nav-item:hover {
+            background: var(--n50);
+            color: var(--green);
+        }
+        .nav-item.active {
+            background: var(--green-lite);
+            color: var(--green-dark);
+        }
+        .nav-ico {
+            font-size: 18px;
+        }
+        /* --- Main Chat Area --- */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: var(--n50);
+            position: relative;
+        }
+        .qbar {
+            padding: 12px 20px;
+            background: #fff;
+            border-bottom: 1px solid var(--n200);
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            flex-shrink: 0;
+        }
+        .qbar::-webkit-scrollbar {
+            display: none;
+        }
+        .qchip {
+            white-space: nowrap;
+            padding: 8px 18px;
+            border-radius: var(--r-full);
+            background: #fff;
+            border: 1px solid var(--n200);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--n700);
+            cursor: pointer;
+            transition: var(--t);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        .qchip:hover {
+            border-color: var(--green);
+            color: var(--green);
+            background: var(--green-pale);
+            transform: translateY(-1px);
+        }
+        .chat-frame-wrap {
+            flex: 1;
+            position: relative;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        /* --- Info Panel (Right) --- */
+        .info {
+            width: var(--info-w);
+            background: #fff;
+            border-left: 1px solid var(--n200);
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            gap: 20px;
+            overflow-y: auto;
+        }
+        .insight-card {
+            background: var(--green-pale);
+            border: 1px solid var(--green-lite);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .ic-hdr {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--green-dark);
+        }
+        .ic-body {
+            font-size: 11px;
+            line-height: 1.6;
+            color: var(--n600);
+        }
+        .service-card {
+            background: var(--white);
+            border: 1px solid var(--n100);
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: var(--t);
+            box-shadow: var(--shadow-sm);
+        }
+        .service-card:hover {
+            transform: translateX(4px);
+            border-color: var(--green-lite);
+        }
+        .svc-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--n50);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .svc-name {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--n800);
+        }
+        /* --- Loading --- */
+        #loading {
+            position: fixed;
+            inset: 0;
+            background: #fff;
+            z-index: 2000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: 0.8s;
+        }
+        .loading-mark {
+            font-size: 60px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+        /* Admin Modal */
+        #modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-box {
+            background: #fff;
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+        .modal-title {
+            font-family: var(--font-serif);
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+        .modal-input {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--n200);
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+        .btn-save {
+            width: 100%;
+            padding: 16px;
+            background: var(--green);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
-<header>
-    <div class="logo" onclick="logoClick()">
-        <div class="logo-icon">🌿</div>
-        <div class="logo-text">おかねの相談室</div>
-    </div>
-    <div style="margin-left: auto; font-size: 12px; font-weight: bold; color: var(--r-green);">● AIアドバイザー接続中</div>
-</header>
-<div class="container">
-    <aside>
-        <div class="card">
-            <div class="card-title">家計診断スコア</div>
-            <div class="score" id="score">--</div>
-            <div style="font-size: 10px; text-align: center; color: #666; margin-top: 5px;">データを読み込むと更新されます</div>
+    <div id="loading">
+        <div class="loading-mark">🌿</div>
+        <div class="hdr-name" style="margin-top:20px">りそな AIマネーアドバイザー</div>
+        <div style="margin-top:10px; color: var(--n400); font-size: 12px; letter-spacing: 0.2em;">SYSTEM INITIALIZING...
         </div>
-        <div class="card">
-            <div class="card-title">データアップロード</div>
-            <div class="upload-zone" onclick="document.getElementById('fileInp').click()">
-                <div style="font-size: 30px;">📊</div>
-                <div style="font-size: 12px; color: #666;">Excel / CSV を解析</div>
-                <input type="file" id="fileInp" style="display:none" onchange="startAnalysis()">
+    </div>
+    <header>
+        <div class="hdr-logo" onclick="logoClick()">
+            <div class="hdr-mark">🌿</div>
+            <div class="hdr-name">おかねの相談室<span>RESONA AI FINANCIAL ADVISOR</span></div>
+        </div>
+        <div class="hdr-status">
+            <div class="status-dot"></div>
+            <div class="status-text">プレミアムAIに接続中</div>
+        </div>
+    </header>
+    <div class="wrap">
+        <aside class="sb">
+            <div>
+                <div class="section-title">家計診断ステータス</div>
+                <div class="score-card">
+                    <div class="score-val" id="score">84</div>
+                    <div class="score-lbl">総合家計スコア</div>
+                    <div class="score-bar">
+                        <div class="score-fill" id="scoreFill"></div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </aside>
-    <main>
-        <iframe id="dify" src="https://udify.app/chatbot/fCguvhc6kbDWNOAZ"></iframe>
-    </main>
-</div>
-<div id="adminModal">
-    <div class="modal-content">
-        <h3>管理者設定</h3>
-        <input type="text" id="urlInput" placeholder="Dify URL" style="width:100%; margin: 15px 0; padding:10px;">
-        <button class="btn" onclick="saveAdmin()">保存</button>
-        <button class="btn" onclick="closeAdmin()" style="background:#ccc;">閉じる</button>
+            <div>
+                <div class="section-title">データインポート</div>
+                <div class="up-zone" onclick="document.getElementById('fileInp').click()">
+                    <input type="file" id="fileInp" style="display:none" onchange="runDemo()">
+                    <div class="up-icon">📊</div>
+                    <div class="up-text">Excel / CSV を解析</div>
+                    <div class="up-sub">家計データからAIが診断</div>
+                </div>
+                <div id="fileStatus"
+                    style="font-size:11px; color:var(--green); margin-top:10px; text-align:center; display:none;">✅
+                    ファイルの読み込みが完了しました</div>
+            </div>
+            <nav>
+                <div class="section-title">メニュー</div>
+                <div class="nav-item active"><span class="nav-ico">💬</span>AIに相談する</div>
+                <div class="nav-item"><span class="nav-ico">📊</span>資産推移を分析</div>
+                <div class="nav-item"><span class="nav-ico">🎯</span>目標・ライフプラン</div>
+                <div class="nav-item"><span class="nav-ico">🏦</span>りそな提携サービス</div>
+            </nav>
+        </aside>
+        <main>
+            <div class="qbar">
+                <div class="qchip" onclick="sendQ('毎月の支出の無駄を分析して')">📈 支出の無駄を分析</div>
+                <div class="qchip" onclick="sendQ('新NISAで月5万円積み立てると？')">💰 新NISAシミュレーション</div>
+                <div class="qchip" onclick="sendQ('今の年収で住宅ローンはいくら借りれる？')">🏠 住宅ローンの相談</div>
+                <div class="qchip" onclick="sendQ('老後資金3000万円貯めるプランを')">🌴 老後の資産形成</div>
+            </div>
+            <div class="chat-frame-wrap">
+                <iframe id="dify" src="https://udify.app/chatbot/fCguvhc6kbDWNOAZ" allow="microphone"></iframe>
+            </div>
+        </main>
+        <aside class="info">
+            <div>
+                <div class="section-title">家計インサイト</div>
+                <div class="insight-card">
+                    <div class="ic-hdr">✨ 節約のチャンス</div>
+                    <div class="ic-body">サブスクリプション費用が平均より3,000円高い傾向にあります。見直しで年間3.6万円の余裕が生まれます。</div>
+                </div>
+            </div>
+            <div>
+                <div class="section-title">りそなおすすめ</div>
+                <div class="service-card">
+                    <div class="svc-icon">📈</div>
+                    <div class="svc-name">りそな投資信託</div>
+                </div>
+                <div class="service-card">
+                    <div class="svc-icon">🛡️</div>
+                    <div class="svc-name">保険の無料見直し</div>
+                </div>
+                <div class="service-card">
+                    <div class="svc-icon">📅</div>
+                    <div class="svc-name">店舗での相談予約</div>
+                </div>
+            </div>
+        </aside>
     </div>
-</div>
-<script>
-    function startAnalysis() {
-        document.getElementById('score').innerText = "分析中";
-        setTimeout(() => {
-            const newScore = Math.floor(Math.random() * 20) + 75;
-            document.getElementById('score').innerText = newScore;
-            alert("データの分析が完了しました。AIに詳細を聞いてみてください。");
-        }, 2000);
-    }
-    let clicks = 0;
-    function logoClick() { 
-        clicks++; 
-        if(clicks >= 5) { document.getElementById('adminModal').style.display='flex'; clicks=0; }
-        setTimeout(() => clicks=0, 3000);
-    }
-    function closeAdmin() { document.getElementById('adminModal').style.display='none'; }
-    function saveAdmin() { 
-        const url = document.getElementById('urlInput').value;
-        if(url) document.getElementById('dify').src = url;
-        closeAdmin();
-    }
-</script>
+    <!-- Admin Modal -->
+    <div id="modal">
+        <div class="modal-box">
+            <h3 class="modal-title">管理者設定</h3>
+            <p style="font-size:12px; color:var(--n400); margin-bottom:20px;">デモ用URLとパスワードの設定</p>
+            <input type="text" id="urlInp" class="modal-input" placeholder="Dify URL (https://udify.app/...)">
+            <input type="password" id="passInp" class="modal-input" placeholder="管理者パスワードを入力">
+            <button class="btn-save" onclick="saveAdmin()">設定を保存して更新</button>
+            <p onclick="closeAdmin()"
+                style="text-align:center; font-size:12px; color:var(--n400); margin-top:20px; cursor:pointer;">キャンセル</p>
+        </div>
+    </div>
+    <script>
+        window.onload = () => {
+            setTimeout(() => {
+                const loader = document.getElementById('loading');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 800);
+            }, 1500);
+            const saved = localStorage.getItem('resona_demo_url');
+            if (saved) document.getElementById('dify').src = saved;
+        };
+        function runDemo() {
+            const status = document.getElementById('fileStatus');
+            const scoreVal = document.getElementById('score');
+            const fill = document.getElementById('scoreFill');
+            status.style.display = 'block';
+            status.innerText = "⏳ データを高度解析中...";
+            setTimeout(() => {
+                const rand = Math.floor(Math.random() * 15) + 80;
+                scoreVal.innerText = rand;
+                fill.style.width = rand + "%";
+                status.innerText = "✅ 解析完了：AIがデータを反映しました";
+                alert("家計データの読み込みが完了しました。アドバイザーに「今のデータの分析結果を教えて」と話しかけてください。");
+            }, 2500);
+        }
+        function sendQ(q) {
+            alert("「" + q + "」とAIに送信します。\n（デモ：クリップボードにコピーしましたので、チャット欄に貼り付けてください）");
+            navigator.clipboard.writeText(q);
+        }
+        let clicks = 0;
+        function logoClick() {
+            clicks++;
+            if (clicks >= 5) { document.getElementById('modal').style.display = 'flex'; clicks = 0; }
+            setTimeout(() => clicks = 0, 3000);
+        }
+        function closeAdmin() { document.getElementById('modal').style.display = 'none'; }
+        function saveAdmin() {
+            const url = document.getElementById('urlInp').value;
+            const pass = document.getElementById('passInp').value;
+            if (pass === 'resona2025') {
+                if (url) {
+                    localStorage.setItem('resona_demo_url', url);
+                    document.getElementById('dify').src = url;
+                }
+                alert('設定を保存しました。');
+                closeAdmin();
+            } else { alert('パスワードが正しくありません。'); }
+        }
+    </script>
 </body>
 </html>
