@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -9,6 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@600&family=Montserrat:wght@600;700&display=swap"
         rel="stylesheet">
+
     <style>
         :root {
             /* Official Resona Brand Colors */
@@ -19,20 +21,24 @@
             --resona-orange-hover: #d15610;
             --resona-orange-lite: #fff0e7;
             --resona-yellow: #f4d03f;
+
             --text-main: #333333;
             --text-sub: #666666;
             --bg-gray: #f4f7f6;
             --border-gray: #e0e0e0;
             --white: #ffffff;
+
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             --header-h: 80px;
             --nav-h: 50px;
         }
+
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
+
         body {
             font-family: 'Noto Sans JP', sans-serif;
             background: var(--bg-gray);
@@ -40,6 +46,7 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
+
         /* --- Global Header (Official Replication) --- */
         .top-bar {
             height: 34px;
@@ -50,14 +57,17 @@
             padding: 0 40px;
             font-size: 11px;
         }
+
         .top-bar a {
             color: #ccc;
             margin-right: 20px;
             transition: 0.2s;
         }
+
         .top-bar a:hover {
             color: white;
         }
+
         header {
             height: var(--header-h);
             background: var(--white);
@@ -68,16 +78,19 @@
             z-index: 1000;
             position: relative;
         }
+
         .logo img {
             height: 44px;
             display: block;
         }
+
         .main-nav {
             display: flex;
             gap: 30px;
             font-size: 15px;
             font-weight: 700;
         }
+
         .nav-link {
             color: var(--text-main);
             cursor: pointer;
@@ -85,17 +98,20 @@
             padding-bottom: 5px;
             transition: 0.2s;
         }
+
         .nav-link:hover,
         .nav-link.active {
             color: var(--resona-green);
             border-bottom-color: var(--resona-green);
         }
+
         .header-right {
             margin-left: auto;
             display: flex;
             align-items: center;
             gap: 15px;
         }
+
         .btn-login {
             padding: 10px 24px;
             border-radius: 6px;
@@ -108,15 +124,18 @@
             border: none;
             box-shadow: 0 2px 8px rgba(236, 108, 31, 0.2);
         }
+
         .btn-login:hover {
             background: var(--resona-orange-hover);
             transform: translateY(-1px);
         }
+
         .btn-search {
             font-size: 20px;
             color: var(--resona-green);
             cursor: pointer;
         }
+
         /* --- Sub Header --- */
         .sub-head {
             background: var(--white);
@@ -130,13 +149,16 @@
             font-size: 13px;
             font-weight: 500;
         }
+
         .sub-head a {
             color: var(--text-sub);
         }
+
         .sub-head a.active {
             color: var(--resona-green);
             font-weight: 700;
         }
+
         /* --- App Container --- */
         .app-wrap {
             max-width: 1440px;
@@ -147,12 +169,14 @@
             gap: 30px;
             height: calc(100vh - 250px);
         }
+
         /* --- Sidebar (Dashboard Style) --- */
         .sidebar {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
+
         .card {
             background: var(--white);
             border-radius: 12px;
@@ -160,6 +184,7 @@
             box-shadow: var(--shadow);
             border: 1px solid var(--border-gray);
         }
+
         .card-title {
             font-size: 14px;
             font-weight: 700;
@@ -168,9 +193,11 @@
             border-left: 4px solid var(--resona-green);
             padding-left: 10px;
         }
+
         .user-profile {
             text-align: center;
         }
+
         .user-av {
             width: 64px;
             height: 64px;
@@ -183,11 +210,13 @@
             font-size: 28px;
             color: var(--resona-green);
         }
+
         .user-name {
             font-size: 16px;
             font-weight: 700;
             margin-bottom: 4px;
         }
+
         .user-rank {
             font-size: 11px;
             color: var(--resona-green);
@@ -196,6 +225,7 @@
             padding: 2px 10px;
             border-radius: 20px;
         }
+
         /* Data Analyze Demo */
         .demo-zone {
             text-align: center;
@@ -205,13 +235,16 @@
             cursor: pointer;
             transition: 0.3s;
         }
+
         .demo-zone:hover {
             background: var(--resona-green-lite);
         }
+
         .demo-icon {
             font-size: 32px;
             margin-bottom: 8px;
         }
+
         .demo-btn {
             background: var(--resona-green);
             color: white;
@@ -222,6 +255,7 @@
             margin-top: 10px;
             display: inline-block;
         }
+
         /* --- Main Content (Chatbot) --- */
         .main-content {
             background: var(--white);
@@ -232,6 +266,7 @@
             flex-direction: column;
             overflow: hidden;
         }
+
         .chat-header {
             padding: 15px 25px;
             border-bottom: 1px solid var(--border-gray);
@@ -239,13 +274,16 @@
             align-items: center;
             gap: 12px;
         }
+
         .chat-logo {
             font-size: 20px;
         }
+
         .chat-title {
             font-weight: 700;
             color: var(--resona-green-dark);
         }
+
         .chat-status {
             margin-left: auto;
             font-size: 12px;
@@ -254,6 +292,7 @@
             align-items: center;
             gap: 6px;
         }
+
         .pulse-dot {
             width: 8px;
             height: 8px;
@@ -261,35 +300,42 @@
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
+
         @keyframes pulse {
             0% {
                 transform: scale(1);
                 opacity: 1;
             }
+
             50% {
                 transform: scale(1.5);
                 opacity: 0.4;
             }
+
             100% {
                 transform: scale(1);
                 opacity: 1;
             }
         }
+
         .iframe-wrap {
             flex: 1;
             position: relative;
         }
+
         iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
+
         /* --- Footer (Corporate Style) --- */
         footer {
             background: #333;
             color: white;
             padding: 60px 40px;
         }
+
         .footer-grid {
             max-width: 1360px;
             margin: 0 auto;
@@ -297,15 +343,18 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 40px;
         }
+
         .footer-col h4 {
             font-size: 14px;
             margin-bottom: 20px;
             border-bottom: 1px solid #555;
             padding-bottom: 10px;
         }
+
         .footer-col ul {
             list-style: none;
         }
+
         .footer-col li {
             margin-bottom: 12px;
             font-size: 13px;
@@ -313,9 +362,11 @@
             cursor: pointer;
             transition: 0.2s;
         }
+
         .footer-col li:hover {
             color: white;
         }
+
         .footer-bottom {
             border-top: 1px solid #444;
             margin-top: 60px;
@@ -326,6 +377,7 @@
             font-size: 12px;
             color: #777;
         }
+
         /* Load Animation */
         #loader {
             position: fixed;
@@ -338,6 +390,7 @@
             justify-content: center;
             transition: 0.8s;
         }
+
         .loader-icon {
             width: 80px;
             height: 80px;
@@ -351,15 +404,19 @@
             box-shadow: 0 10px 30px rgba(0, 155, 96, 0.3);
             animation: bounce 1.5s infinite ease-in-out;
         }
+
         @keyframes bounce {
+
             0%,
             100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-20px);
             }
         }
+
         /* Hidden Admin */
         #admin {
             position: fixed;
@@ -377,18 +434,22 @@
         }
     </style>
 </head>
+
 <body>
+
     <div id="loader">
         <div class="loader-icon">🌿</div>
         <p style="margin-top:20px; font-family:'Noto Serif JP'; font-size:24px; color:var(--resona-green-dark)">おかねの相談室
         </p>
     </div>
+
     <div class="top-bar">
         <a href="https://www.resonabank.co.jp/" target="_blank">個人のお客様</a>
         <a href="https://www.resonabank.co.jp/hojin/" target="_blank">法人のお客様</a>
         <a href="https://www.resonabank.co.jp/about/" target="_blank">りそな銀行について</a>
         <div style="margin-left:auto">店舗・ATM検索 | よくあるご質問</div>
     </div>
+
     <header>
         <div class="logo">
             <a href="https://www.resonabank.co.jp/">
@@ -415,12 +476,14 @@
                 ログイン</button>
         </div>
     </header>
+
     <div class="sub-head">
         <a href="https://www.resonabank.co.jp/kojin/sim/">シミュレーション一覧</a>
         <a href="#" class="active">AIマネーアドバイザー（おかねの相談室）</a>
         <a href="https://www.resonabank.co.jp/kojin/nisa/">新NISA</a>
         <a href="https://www.resonabank.co.jp/kojin/jutaku/">住宅ローン</a>
     </div>
+
     <div class="app-wrap">
         <aside class="sidebar">
             <div class="card user-profile">
@@ -428,6 +491,7 @@
                 <div class="user-name">田中 美咲 様</div>
                 <div class="user-rank">ダイヤモンド会員</div>
             </div>
+
             <div class="card">
                 <div class="card-title">データで相談</div>
                 <div class="demo-zone" onclick="startAnalyze()">
@@ -440,6 +504,7 @@
                     style="margin-top:15px; font-size:11px; text-align:center; display:none; color:var(--resona-green); font-weight:700;">
                     ✅ 解析完了：支出傾向を特定</div>
             </div>
+
             <div class="card">
                 <div class="card-title">関連サービス</div>
                 <div style="font-size:13px;">
@@ -449,6 +514,7 @@
                 </div>
             </div>
         </aside>
+
         <main class="main-content">
             <div class="chat-header">
                 <div class="chat-logo">🤖</div>
@@ -459,10 +525,11 @@
                 </div>
             </div>
             <div class="iframe-wrap">
-                <iframe id="dify" src="https://udify.app/chatbot/fCguvhc6kbDWNOAZ" allow="microphone"></iframe>
+                <iframe id="dify" src="https://udify.app/chatbot/KQMTVO0OlYjN5zn2" allow="microphone"></iframe>
             </div>
         </main>
     </div>
+
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
@@ -507,8 +574,10 @@
             <div>利用規約 | プライバシーポリシー | 免責事項</div>
         </div>
     </footer>
+
     <!-- Tiny Admin Trigger -->
     <div id="admin" onclick="openAdmin()">⚙</div>
+
     <script>
         window.onload = () => {
             setTimeout(() => {
@@ -516,17 +585,20 @@
                 setTimeout(() => document.getElementById('loader').style.display = 'none', 800);
             }, 2000);
         };
+
         function startAnalyze() {
             const status = document.getElementById('file-status');
             status.style.display = 'block';
             status.innerText = "⏳ データを高度解析中...";
             status.style.color = "var(--resona-orange)";
+
             setTimeout(() => {
                 status.innerText = "✅ 解析完了：支出傾向を特定しました";
                 status.style.color = "var(--resona-green)";
                 alert("データの解析が完了しました。\nAIマネーアドバイザーに「今のデータの分析結果を教えて」と話しかけてみてください。");
             }, 2500);
         }
+
         function openAdmin() {
             const url = prompt("Dify URLを更新しますか？", localStorage.getItem('resona_url') || "");
             if (url) {
@@ -535,5 +607,7 @@
             }
         }
     </script>
+
 </body>
+
 </html>
