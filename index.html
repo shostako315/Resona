@@ -3,122 +3,293 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>おかねの相談室 | APIデモ</title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>おかねの相談室 | りそなグループ AIアドバイザー</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Noto+Serif+JP:wght@400;600&family=Shippori+Mincho:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
-    :root { --green: #01894d; --green-lite: #dff2ea; --n100: #f2f2f2; }
+    :root {
+      --green: #01894d; --green-dark: #005c35; --green-mid: #019a58; --green-lite: #dff2ea; --green-pale: #f0faf5;
+      --orange: #e8680a; --n900: #111; --n700: #3a3a3a; --n400: #999; --n200: #e4e4e4; --n50: #f9f9f9; --white: #fff;
+      --shadow: 0 4px 20px rgba(0,0,0,.08);
+      --r-md: 14px; --r-lg: 22px; --r-full: 9999px;
+      --header-h: 64px; --sidebar-w: 288px; --info-w: 240px; --footer-h: 65px;
+      --t: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Noto Sans JP', sans-serif; background: #f4f7f5; height: 100dvh; display: flex; flex-direction: column; }
-    
-    header { height: 60px; background: white; display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid #ddd; justify-content: space-between; }
-    .main-container { display: flex; flex: 1; overflow: hidden; }
-    
-    /* サイドバー */
-    .sidebar { width: 260px; background: white; border-right: 1px solid #ddd; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-    .nav-item { padding: 12px; background: #f9f9f9; border-radius: 8px; cursor: pointer; font-size: 14px; transition: 0.2s; border: 1px solid transparent; }
-    .nav-item:hover { background: var(--green-lite); border-color: var(--green); }
+    body { font-family: 'Noto Sans JP', sans-serif; background: var(--n50); color: var(--n900); height: 100dvh; overflow: hidden; -webkit-font-smoothing: antialiased; }
 
-    /* チャットエリア */
-    .chat-area { flex: 1; display: flex; flex-direction: column; position: relative; }
-    #chatLog { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 15px; }
-    
-    /* 吹き出し */
-    .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.6; }
-    .msg.user { align-self: flex-end; background: var(--green); color: white; border-bottom-right-radius: 4px; }
-    .msg.ai { align-self: flex-start; background: white; border: 1px solid #ddd; border-bottom-left-radius: 4px; }
+    /* ─── Loading & Login ─── */
+    #ls, #loginModal { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; transition: opacity .6s ease; }
+    #ls { background: var(--green-dark); }
+    #loginModal { background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); display: none; }
+    .login-card { background: white; padding: 40px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; box-shadow: var(--shadow); }
+    .ls-inner { text-align: center; color: white; animation: lsFadeUp .5s ease forwards; }
+    .ls-mark { font-size: 50px; margin-bottom: 20px; }
+    @keyframes lsFadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .login-btn { width: 100%; padding: 14px; background: var(--green); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer; margin-top: 20px; transition: .2s; }
+    .login-btn:hover { background: var(--green-dark); transform: translateY(-2px); }
 
-    /* 入力欄 */
-    .input-area { padding: 20px; background: white; border-top: 1px solid #ddd; display: flex; gap: 10px; }
-    input { flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; outline: none; }
-    button#sendBtn { padding: 0 20px; background: var(--green); color: white; border: none; border-radius: 8px; cursor: pointer; }
+    /* ─── App Layout ─── */
+    #app { display: flex; flex-direction: column; height: 100dvh; opacity: 0; transition: opacity .5s ease; }
+    #app.visible { opacity: 1; }
+    .wrap { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-    @media (max-width: 768px) { .sidebar { display: none; } }
+    /* ─── Header ─── */
+    .hdr { height: var(--header-h); background: var(--white); border-bottom: 1px solid var(--n200); display: flex; align-items: center; padding: 0 20px; gap: 15px; z-index: 100; flex-shrink: 0; }
+    .hdr-logo { display: flex; align-items: center; gap: 10px; font-family: 'Shippori Mincho', serif; font-weight: 700; color: var(--green-dark); }
+    .hdr-mark { width: 34px; height: 34px; background: var(--green); color: white; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 18px; box-shadow: 0 2px 8px rgba(1,137,77,.25); }
+    .hdr-context { flex: 1; border-left: 1px solid var(--n200); padding-left: 15px; }
+    .hdr-ctx-main { font-size: 13px; font-weight: 600; color: var(--n700); }
+    .hdr-ctx-sub { font-size: 10px; color: var(--n400); margin-top: 2px; }
+    .burger { display: none; font-size: 24px; cursor: pointer; color: var(--green-dark); }
+
+    /* ─── Sidebar ─── */
+    .sb { width: var(--sidebar-w); background: var(--white); border-right: 1px solid var(--n200); display: flex; flex-direction: column; flex-shrink: 0; transition: transform var(--t); z-index: 900; }
+    .sb-section { padding: 20px 15px 10px; }
+    .sb-label { font-size: 10px; font-weight: 700; color: var(--n400); letter-spacing: .1em; margin-bottom: 12px; text-transform: uppercase; border-bottom: 1px solid var(--n50); padding-bottom: 5px; }
+    .pc { background: linear-gradient(135deg, var(--green-dark), #003d20); border-radius: var(--r-md); padding: 18px; color: white; margin: 0 15px 15px; position: relative; overflow: hidden; }
+    .pc::after { content: '👑'; position: absolute; top: 10px; right: 10px; font-size: 20px; opacity: 0.2; }
+    .pc-name { font-size: 15px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .pc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 10px; }
+    .pc-cell { background: rgba(255,255,255,0.1); padding: 10px; border-radius: 10px; }
+    .nav-item { padding: 12px 20px; display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--n700); cursor: pointer; transition: .2s; border-left: 4px solid transparent; }
+    .nav-item:hover { background: var(--green-pale); }
+    .nav-item.active { background: var(--green-lite); color: var(--green-dark); border-left-color: var(--green); font-weight: 600; }
+
+    /* ─── Chat Area (PC Golden Ratio) ─── */
+    .chat { flex: 1; display: flex; flex-direction: column; background: #f8faf9; position: relative; }
+    .qbar { padding: 12px 20px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; background: white; border-bottom: 1px solid var(--n200); }
+    .qbar::-webkit-scrollbar { display: none; }
+    .qchip { flex-shrink: 0; padding: 8px 16px; border-radius: var(--r-full); border: 1px solid var(--n200); background: white; font-size: 12px; font-weight: 500; cursor: pointer; transition: .2s; display: flex; align-items: center; gap: 6px; }
+    .qchip:hover { border-color: var(--green); color: var(--green); box-shadow: var(--shadow); }
+
+    .chat-container { flex: 1; width: 100%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; background: white; box-shadow: 0 0 40px rgba(0,0,0,0.02); }
+    #chatLog { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 16px; scroll-behavior: smooth; }
+    .msg { max-width: 85%; padding: 14px 20px; border-radius: 18px; font-size: 14px; line-height: 1.6; animation: fadeIn .3s ease; }
+    .msg.user { align-self: flex-end; background: var(--green); color: white; border-bottom-right-radius: 4px; box-shadow: 0 4px 12px rgba(1,137,77,0.15); }
+    .msg.ai { align-self: flex-start; background: var(--n50); border: 1px solid var(--n200); border-bottom-left-radius: 4px; color: var(--n900); }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .input-area { padding: 20px; border-top: 1px solid var(--n200); display: flex; gap: 12px; background: white; }
+    .finp { flex: 1; padding: 14px 20px; border: 1px solid var(--n200); border-radius: 14px; outline: none; font-size: 14px; transition: .2s; }
+    .finp:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(1,137,77,0.1); }
+    .send-btn { padding: 0 24px; background: var(--green); color: white; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; transition: .2s; }
+    .send-btn:hover { background: var(--green-dark); }
+
+    /* ─── Info Panel ─── */
+    .info { width: var(--info-w); background: white; border-left: 1px solid var(--n200); padding: 20px; overflow-y: auto; }
+    .info-label { font-size: 10px; font-weight: 700; color: var(--n400); margin-bottom: 12px; text-transform: uppercase; letter-spacing: .1em; }
+    .st-row { display: flex; align-items: center; gap: 10px; padding: 12px; background: var(--n50); border-radius: 10px; font-size: 11px; margin-bottom: 24px; }
+    .st-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 8px var(--green); animation: pulse 2s infinite; }
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+    /* ─── Mobile footer ─── */
+    .mobile-nav { position: fixed; bottom: 0; left: 0; right: 0; height: var(--footer-h); background: white; border-top: 1px solid var(--n200); display: none; grid-template-columns: repeat(4, 1fr); align-items: center; text-align: center; z-index: 1000; padding-bottom: env(safe-area-inset-bottom); }
+    .m-nav-item { font-size: 10px; color: var(--n400); display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
+    .m-nav-ico { font-size: 20px; color: var(--green-dark); }
+
+    /* Overlay */
+    #overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 850; display: none; }
+
+    @media (max-width: 1024px) { .info { display: none; } }
+    @media (max-width: 768px) {
+      .burger { display: block; }
+      .sb { position: absolute; left: 0; top: 0; bottom: 0; transform: translateX(-100%); width: 280px; }
+      .sb.open { transform: translateX(0); }
+      #overlay.open { display: block; }
+      .mobile-nav { display: grid; }
+      .chat-container { padding-bottom: var(--footer-h); }
+    }
   </style>
 </head>
 <body>
 
-<header>
-  <div style="font-weight: bold; color: var(--green);">🌿 おかねの相談室 API DEMO</div>
-  <div style="font-size: 12px;">田中 美咲 様</div>
-</header>
+<div id="ls">
+  <div class="ls-inner">
+    <div class="ls-mark">🌿</div>
+    <h2 style="font-family: 'Shippori Mincho', serif; font-size: 28px;">おかねの相談室</h2>
+    <div style="font-size: 12px; margin-top: 10px; opacity: 0.8; letter-spacing: .2em;">RESONA AI FINANCIAL ADVISOR</div>
+  </div>
+</div>
 
-<div class="main-container">
-  <aside class="sidebar">
-    <div style="font-size: 11px; font-weight: bold; color: #999; margin-bottom: 5px;">ショートカット</div>
-    <div class="nav-item" onclick="quickAsk('住宅ローンの借り入れ可能額をシミュレーションしたい')">🏠 ローン相談</div>
-    <div class="nav-item" onclick="quickAsk('2024年の支出分析レポートを作成して')">📊 支出分析</div>
-    <div class="nav-item" onclick="quickAsk('新NISAでの資産運用の始め方は？')">📈 資産運用</div>
-  </aside>
+<div id="loginModal">
+  <div class="login-card">
+    <div style="font-size: 44px; margin-bottom: 15px;">👤</div>
+    <h3 style="font-family: 'Shippori Mincho', serif; margin-bottom: 10px; font-size: 22px;">田中 美咲 様</h3>
+    <p style="font-size: 13px; color: #666; line-height: 1.8;">家計データ（2020-2024）の読み込みが<br>完了しました。相談を開始しますか？</p>
+    <button class="login-btn" onclick="startApp()">ログインして相談を始める</button>
+  </div>
+</div>
 
-  <main class="chat-area">
-    <div id="chatLog">
-      <div class="msg ai">こんにちは！田中様。本日はどのようなお手伝いをしましょうか？</div>
+<div id="app">
+  <header class="hdr">
+    <div class="burger" onclick="toggleSb()">☰</div>
+    <div class="hdr-logo"><div class="hdr-mark">🌿</div>おかねの相談室</div>
+    <div class="hdr-context">
+      <div class="hdr-ctx-main" id="hdrStatus">AIアドバイザー 接続中</div>
+      <div class="hdr-ctx-sub">田中様の最新データに基づくアドバイス</div>
     </div>
+  </header>
+
+  <div class="wrap">
+    <div id="overlay" onclick="toggleSb()"></div>
     
-    <div class="input-area">
-      <input type="text" id="userInput" placeholder="メッセージを入力...">
-      <button id="sendBtn" onclick="handleSend()">送信</button>
-    </div>
-  </main>
+    <aside class="sb" id="sidebar">
+      <div class="sb-section"><div class="sb-label">マイプロフィール</div></div>
+      <div class="pc">
+        <div class="pc-name">田中 美咲 様</div>
+        <div class="pc-grid">
+          <div class="pc-cell">分析データ<br><b>2020〜2024年</b></div>
+          <div class="pc-cell">現在の推計資産<br><b>¥4,330,000</b></div>
+        </div>
+      </div>
+      
+      <div class="sb-section"><div class="sb-label">相談ショートカット</div></div>
+      <nav>
+        <div class="nav-item active" onclick="quickAsk('これまでの収支を振り返って、今の私の家計の健康状態はどうですか？')">💬 AIに相談</div>
+        <div class="nav-item" onclick="quickAsk('2024年の支出分析レポートを、グラフの項目を含めて作成して')">📊 支出分析</div>
+        <div class="nav-item" onclick="quickAsk('住宅ローンの借り入れ可能額と、返済計画をシミュレーションしたい')">🏠 住宅ローン</div>
+        <div class="nav-item" onclick="quickAsk('老後資金3000万円を貯めるための、具体的な積立プランを立てて')">🎯 目標設定</div>
+      </nav>
+    </aside>
+
+    <main class="chat">
+      <div class="qbar">
+        <button class="qchip" onclick="quickAsk('毎月の貯蓄余力を計算して')">💰 貯蓄余力</button>
+        <button class="qchip" onclick="quickAsk('食費の節約のポイントは？')">🍱 食費節約</button>
+        <button class="qchip" onclick="quickAsk('サブスクの見直しをして')">📱 サブスク</button>
+        <button class="qchip" onclick="quickAsk('老後の必要資金を教えて')">🌴 老後資金</button>
+      </div>
+      
+      <div class="chat-container">
+        <div id="chatLog">
+          <div class="msg ai">こんにちは、田中様。りそなAIアドバイザーです。お客様の5年間の家計データを踏まえ、資産形成のベストパートナーとしてお手伝いいたします。本日は何からお話ししましょうか？</div>
+        </div>
+        <div class="input-area">
+          <input type="text" id="userInput" class="finp" placeholder="メッセージを入力...">
+          <button class="send-btn" onclick="handleSend()">送信</button>
+        </div>
+      </div>
+    </main>
+
+    <aside class="info">
+      <div class="info-label">接続ステータス</div>
+      <div class="st-row"><div class="st-dot"></div> <div>AI稼働中 (Active)<br><small style="color:#aaa">Last Sync: 15:43</small></div></div>
+      
+      <div class="info-label">家計インサイト</div>
+      <div style="background: var(--green-pale); padding: 15px; border-radius: 12px; font-size: 12px; line-height: 1.6; color: var(--green-dark); border: 1px solid var(--green-lite);">
+        <b>✅ 積立NISA継続中</b><br>
+        月5万円の投資が定着しています。複利効果により、資産形成の土台が非常に強固です。
+      </div>
+      <div style="margin-top:12px; background: #fff4e6; padding: 15px; border-radius: 12px; font-size: 12px; line-height: 1.6; color: var(--orange); border: 1px solid #ffe4c0;">
+        <b>⚠️ 季節的支出の変動</b><br>
+        12月と5月に支出が集中する傾向があります。予備費の設定をAIと相談しましょう。
+      </div>
+    </aside>
+  </div>
+
+  <nav class="mobile-nav">
+    <div class="m-nav-item" onclick="quickAsk('支出の傾向を分析して')"><span class="m-nav-ico">📊</span>分析</div>
+    <div class="m-nav-item" onclick="quickAsk('住宅ローンの相談')"><span class="m-nav-ico">🏠</span>ローン</div>
+    <div class="m-nav-item" onclick="quickAsk('積立プランの相談')"><span class="m-nav-ico">📈</span>運用</div>
+    <div class="m-nav-item" onclick="toggleSb()"><span class="m-nav-ico">☰</span>Menu</div>
+  </nav>
 </div>
 
 <script>
-  const API_KEY = 'YOUR_DIFY_API_KEY'; // ここにAPIキーを入力
+  // ※ Difyの設定画面から取得したAPIキーを入力してください
+  const API_KEY = 'app-lRGucRJhCbT0w8YijOoDLu8g'; 
   const API_URL = 'https://api.dify.ai/v1/chat-messages';
-  let conversationId = ''; // 会話を継続するためのID
+  let conversationId = '';
 
-  // メッセージを画面に表示
+  // 起動アニメーション
+  window.onload = () => {
+    setTimeout(() => {
+      document.getElementById('ls').style.opacity = '0';
+      setTimeout(() => {
+        document.getElementById('ls').style.display = 'none';
+        document.getElementById('loginModal').style.display = 'flex';
+      }, 600);
+    }, 1800);
+  };
+
+  function startApp() {
+    document.getElementById('loginModal').style.opacity = '0';
+    setTimeout(() => {
+      document.getElementById('loginModal').style.display = 'none';
+      const app = document.getElementById('app');
+      app.classList.add('visible');
+    }, 500);
+  }
+
+  function toggleSb() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('overlay').classList.toggle('open');
+  }
+
+  // チャット画面への追加
   function appendMsg(text, role) {
     const log = document.getElementById('chatLog');
     const div = document.createElement('div');
     div.className = `msg ${role}`;
-    div.innerText = text;
+    // Markdownなどの簡易整形（改行対応）
+    div.innerHTML = text.replace(/\n/g, '<br>');
     log.appendChild(div);
     log.scrollTop = log.scrollHeight;
   }
 
-  // API送信処理
+  // Dify API 通信
   async function askAI(message) {
     appendMsg(message, 'user');
     
+    // スマホ時はメニューを閉じる
+    if(window.innerWidth <= 768) {
+      document.getElementById('sidebar').classList.remove('open');
+      document.getElementById('overlay').classList.remove('open');
+    }
+
     try {
+      document.getElementById('hdrStatus').innerText = 'AIが考え中...';
       const response = await fetch(API_URL, {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${API_KEY}`,
-          'Content-Type': 'application/json'
+        headers: { 
+          'Authorization': `Bearer ${API_KEY}`, 
+          'Content-Type': 'application/json' 
         },
         body: JSON.stringify({
-          inputs: {},
-          query: message,
+          inputs: {}, 
+          query: message, 
           response_mode: "blocking",
-          user: "test-user-001",
+          user: "sato-eigo-user", 
           conversation_id: conversationId
         })
       });
-
+      
       const data = await response.json();
+      document.getElementById('hdrStatus').innerText = 'AIアドバイザー 接続中';
+      
       if (data.answer) {
         appendMsg(data.answer, 'ai');
-        conversationId = data.conversation_id; // IDを保存して会話を繋げる
+        conversationId = data.conversation_id;
       }
     } catch (e) {
-      appendMsg('エラーが発生しました。APIキーを確認してください。', 'ai');
+      document.getElementById('hdrStatus').innerText = '接続エラー';
+      appendMsg('申し訳ございません。通信エラーが発生しました。時間を置いて再度お試しください。', 'ai');
     }
   }
 
   function handleSend() {
-    const input = document.getElementById('userInput');
-    if (!input.value) return;
-    askAI(input.value);
-    input.value = '';
+    const inp = document.getElementById('userInput');
+    if(!inp.value.trim()) return;
+    askAI(inp.value);
+    inp.value = '';
   }
 
-  function quickAsk(msg) {
-    askAI(msg);
-  }
+  function quickAsk(msg) { askAI(msg); }
 
-  // Enterキーで送信
   document.getElementById('userInput').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleSend();
   });
